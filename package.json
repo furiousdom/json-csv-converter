@@ -1,0 +1,36 @@
+{
+  "name": "json-csv-converter",
+  "version": "0.0.1",
+  "description": "CLI tool for converting JSON to CSV files.",
+  "main": "./bin/index.js",
+  "scripts": {
+    "dev": "node ./bin/index",
+    "lint": "eslint ."
+  },
+  "bin": {
+    "json2csv": "./bin/index.js"
+  },
+  "author": {
+    "name": "Dominik Tabak",
+    "email": "tabakdominik@gmail.com",
+    "url": "https://github.com/furiousdom/"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "yargs": "^17.0.1"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.15.0",
+    "@babel/eslint-plugin": "^7.14.5",
+    "eslint-plugin-es": "^4.1.0",
+    "@extensionengine/eslint-config": "^3.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-semistandard": "^16.0.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "eslint-plugin-require-sort": "^1.2.2",
+    "eslint-plugin-vue": "^7.15.1"
+  }
+}
