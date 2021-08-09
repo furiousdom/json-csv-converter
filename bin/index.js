@@ -2,43 +2,27 @@
 'use strict';
 
 const fs = require('fs');
+const { hideBin } = require('yargs/helpers');
 const utils = require('./utils');
 const yargs = require('yargs');
 
-const usage = '\nUsage: json-csv-converter <json_file_path> <csv_file_path>';
+const argv = yargs(hideBin(process.argv)).argv._;
+yargs.usage('\nUsage: json-csv-converter <json_file_path> <csv_file_path>');
 
-const yargsOptions = yargs(process.argv.slice(2))
-  .usage(usage)
-  .help(true)
-  .argv;
+if (!argv.length) {
+  yargs.showHelp();
+  return;
+}
 
-const [jsonFilePath, csvFilePath] = utils.parseFilePaths(yargsOptions._);
+const [jsonFilePath, csvFilePath] = argv;
 
-const jsonFile = fs.readFileSync(jsonFilePath);
+const arr = JSON.parse(fs.readFileSync(jsonFilePath));
 
-const arr = JSON.parse(jsonFile);
+const columns = Object.keys(arr[0]);
 
-let csvCode = '';
+const values = utils.getAllValues(arr);
 
-Object.keys(arr[0]).forEach((key, i) => {
-  csvCode += key;
-  const isLastValue = (Object.keys(arr[0]).length - 1) === i;
-  if (isLastValue) return;
-  csvCode += ',';
-});
-
-csvCode += '\n';
-
-arr.forEach(element => {
-  const values = Object.values(element);
-  values.forEach((val, i) => {
-    csvCode += val;
-    const isLastValue = (values.length - 1) === i;
-    if (isLastValue) return;
-    csvCode += ',';
-  });
-  csvCode += '\n';
-});
+const csvCode = utils.createCsvCode(columns, values);
 
 fs.writeFile(csvFilePath, csvCode, err => {
   if (err) throw err;

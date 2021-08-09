@@ -1,16 +1,30 @@
 'use strict';
 
-const yargs = require('yargs');
-
-function parseFilePaths(args) {
-  const files = [];
-  if (!args.length) yargs.showHelp();
-  else {
-    args.forEach((arg, i) => {
-      files.push(arg);
-    });
-  }
-  return files;
+function getObjectValues(obj) {
+  const values = Object.values(obj);
+  return values.filter(it => !(it instanceof Object));
 }
 
-module.exports = { parseFilePaths };
+function getAllValues(arr) {
+  return arr.map(getObjectValues);
+}
+
+function createCsvLine(arr) {
+  return arr.reduce((accumulator, currentValue) => {
+    return accumulator + ',' + currentValue;
+  });
+}
+
+function createCsvLines(csvValues) {
+  return csvValues.reduce((accumulator, currentValue) => {
+    return accumulator + '\n' + createCsvLine(currentValue);
+  });
+}
+
+function createCsvCode(csvColumns, csvValues) {
+  const csvColumnsText = createCsvLine(csvColumns);
+  const csvValuesText = createCsvLines(csvValues);
+  return csvColumnsText + '\n' + csvValuesText;
+}
+
+module.exports = { getAllValues, createCsvCode };
