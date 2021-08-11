@@ -22,16 +22,8 @@ function getArrayValues(data) {
   return data.map(getObjectValues);
 }
 
-function transformToRow(data) {
-  return data.reduce((accumulator, currentValue) => {
-    return accumulator + ',' + currentValue;
-  });
-}
-
 function transformToRows(csvData) {
-  return csvData.reduce((accumulator, currentValue) => {
-    return accumulator + '\n' + transformToRow(currentValue);
-  });
+  return csvData.map(el => el.join()).join('\n');
 }
 
 function convert(data) {
