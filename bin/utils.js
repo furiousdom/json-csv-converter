@@ -1,16 +1,36 @@
 'use strict';
 
-const yargs = require('yargs');
+const { isArray } = Array;
 
-function parseFilePaths(args) {
-  const files = [];
-  if (!args.length) yargs.showHelp();
-  else {
-    args.forEach((arg, i) => {
-      files.push(arg);
+function getHeaders(data) {
+  data = !isArray(data) ? [data] : data;
+  const headers = new Set();
+  data.forEach(element => {
+    Object.keys(element).forEach(key => {
+      if (!(element[key] instanceof Object)) headers.add(key);
     });
-  }
-  return files;
+  });
+  return [...headers];
 }
 
-module.exports = { parseFilePaths };
+function getObjectValues(obj) {
+  const values = Object.values(obj);
+  return values.filter(it => !(it instanceof Object));
+}
+
+function getArrayValues(data) {
+  return data.map(getObjectValues);
+}
+
+function transformToRows(csvData) {
+  return csvData.map(el => el.join()).join('\n');
+}
+
+function convert(data) {
+  const headers = getHeaders(data);
+  const csvData = getArrayValues(data);
+  csvData.unshift(headers);
+  return transformToRows(csvData);
+}
+
+module.exports = { convert };
