@@ -5,18 +5,12 @@ function dictionary(obj) {
     Object.keys(obj).forEach(key => {
       const value = obj[key];
       const newPropPath = propPath ? `${propPath}/${key}` : key;
-      if (value instanceof Object &&
-          value !== null &&
-          value !== undefined) dictionaryHelper(value, accumulator, newPropPath);
+      if (value instanceof Object) dictionaryHelper(value, accumulator, newPropPath);
       else accumulator[newPropPath] = value;
     });
     return accumulator;
   };
   return dictionaryHelper(obj, {});
-}
-
-function dictionarizeArray(arr) {
-  return arr.map(dictionary);
 }
 
 function transformToRows(data) {
@@ -27,8 +21,8 @@ function transformToRows(data) {
     Object.keys(element).forEach(key => {
       const propIndex = headers.includes(key)
         ? headers.indexOf(key)
-        : headers.push(key);
-      entry[propIndex - 1] = element[key];
+        : headers.push(key) - 1;
+      entry[propIndex] = element[key];
     });
     csvCode.push(entry);
   });
@@ -37,7 +31,8 @@ function transformToRows(data) {
 }
 
 function convert(data) {
-  data = dictionarizeArray(data);
+  data = !Array.isArray(data) ? [data] : data;
+  data = data.map(dictionary);
   return transformToRows(data);
 }
 
