@@ -1,10 +1,11 @@
 #! /usr/bin/env node
 'use strict';
 
+const { parseFilePaths, parseOptions } = require('./utils');
 const { readInput, writeOutput } = require('../lib/fileHandler');
-const { convert } = require('../lib/converter');
+const Dictionary = require('../lib/Dictionary');
 const { hideBin } = require('yargs/helpers');
-const { parseFilePaths } = require('./utils');
+const { transformToRows } = require('../lib/converter');
 const yargs = require('yargs');
 
 const argv = yargs(hideBin(process.argv)).argv;
@@ -16,6 +17,7 @@ yargs
   .option('delimiter <delimiter>', { alias: 'd', describe: 'Enter a delimiter to be used in the new file.', type: 'string', demandOption: false });
 
 const files = parseFilePaths(argv);
+const opts = parseOptions(argv);
 
 if (!files) {
   yargs.showHelp();
@@ -25,6 +27,7 @@ if (!files) {
 const { inputFilePath, outputFilePath } = files;
 
 const data = readInput(inputFilePath);
-const csvCode = convert(data);
+const dict = new Dictionary(opts.propSeparator, data).dictionarize();
+const csvCode = transformToRows(dict, opts.delimiter, opts.noHeader);
 writeOutput(outputFilePath, csvCode);
 console.log('Program finished.');
