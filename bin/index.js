@@ -27,7 +27,7 @@ if (!files) {
 const { inputFilePath, outputFilePath } = files;
 
 const data = readInput(inputFilePath);
-const dict = new Dictionary(opts.propSeparator, data).accumulator;
+const dict = new Dictionary(opts.propSeparator, data).dictionarize();
 const csvCode = transformToRows(dict, opts.delimiter, opts.noHeader);
 writeOutput(outputFilePath, csvCode);
 console.log('Program finished.');
