@@ -2,7 +2,7 @@
 'use strict';
 
 const { readInput, writeOutput } = require('./fileHandler');
-const { convert } = require('./utils');
+const { convert } = require('./converter');
 const { hideBin } = require('yargs/helpers');
 const yargs = require('yargs');
 
