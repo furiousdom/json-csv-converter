@@ -1,10 +1,10 @@
 #! /usr/bin/env node
 'use strict';
 
+const { parseFilePaths, parseOptions } = require('./utils');
 const { readInput, writeOutput } = require('../lib/fileHandler');
 const { convert } = require('../lib/converter');
 const { hideBin } = require('yargs/helpers');
-const { parseFilePaths } = require('./utils');
 const yargs = require('yargs');
 
 const argv = yargs(hideBin(process.argv)).argv;
@@ -17,6 +17,8 @@ yargs
 
 const files = parseFilePaths(argv);
 
+const opts = parseOptions(argv);
+
 if (!files) {
   yargs.showHelp();
   return;
@@ -25,6 +27,6 @@ if (!files) {
 const { inputFilePath, outputFilePath } = files;
 
 const data = readInput(inputFilePath);
-const csvCode = convert(data);
+const csvCode = convert(data, opts);
 writeOutput(outputFilePath, csvCode);
 console.log('Program finished.');
