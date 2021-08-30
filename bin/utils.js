@@ -3,13 +3,14 @@
 function parseOptions(argv) {
   return {
     noHeader: argv.header || false,
-    propSeparator: argv.propSeparator || '/',
-    delimiter: (argv.delimiter || argv.d) || ','
+    propSeparator: (argv.propSeparator || argv.s) || '/',
+    delimiter: (argv.delimiter || argv.d) || ',',
+    excludeProps: (argv.excludeProps || argv.e) || []
   };
 }
 
 function parseFilePaths(argv) {
-  if (argv._.length !== 2) return null;
+  if (argv._.length !== 2) return {};
   const [inputFilePath, outputFilePath] = argv._;
   return { inputFilePath, outputFilePath };
 }
