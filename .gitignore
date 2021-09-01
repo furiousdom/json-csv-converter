@@ -7,6 +7,5 @@ node_modules
 # OS services
 .DS_Store
 
-# Temporary test files
-mock.json
-mock.csv
+# Storage
+data
