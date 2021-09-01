@@ -51,23 +51,3 @@ function renamePrompt(props) {
     newPath: prompt(`How do you want to rename ${oldPath} property? `)
   }));
 }
-
-// function intersectWithArgs(config, argv) {
-//   const accumulator = {};
-//   Object.keys(config).forEach(key => {
-//     if (!(argv.includes(key) || argv.includes(flags[key]?.alias))) accumulator[key] = config[key];
-//   });
-//   return Object.assign(argv, accumulator);
-// }
-
-// function getFlagAlias(flag) {
-//   const flagAliases = {};
-//   Object.keys(flags).forEach(key => {
-//     const camelizedKey = key.includes('-') ? camelize(key) : '';
-//     const alias = flags[key]?.alias;
-//     const aliases = Array.isArray(alias)
-//       ? alias.concat(camelizedKey)
-//       : [alias, camelizedKey];
-//     Object.defineProperty(flagAliases, key, { value: aliases });
-//   });
-// }
