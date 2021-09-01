@@ -22,8 +22,8 @@ function parseOptions(argv) {
 module.exports = { parseFilePaths, parseOptions };
 
 function parseEOL(eolFlag) {
-  if (eolFlag === 'rn' || eolFlag === '\\r\\n') return '\r\n';
-  if (eolFlag === 'n' || eolFlag === '\\n') return '\n';
+  if (eolFlag === 'windows') return '\r\n';
+  if (eolFlag === 'unix') return '\n';
   return EOL;
 }
 
