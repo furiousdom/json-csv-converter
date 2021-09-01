@@ -17,5 +17,4 @@ if (!(inputFilePath || outputFilePath)) {
 const data = readInput(inputFilePath);
 const csvCode = convert(data, opts);
 writeOutput(outputFilePath, csvCode);
-console.log('Converting finished.');
-return 0;
+console.log('Program finished.');
