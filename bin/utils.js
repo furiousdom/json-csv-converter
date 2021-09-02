@@ -1,7 +1,6 @@
 'use strict';
 
 const { EOL } = require('os');
-const flags = require('./flags');
 const { readInput } = require('../lib/fileHandler');
 
 function parseFilePaths(argv) {
@@ -13,10 +12,7 @@ function parseFilePaths(argv) {
 function parseOptions(argv) {
   if (!(argv.config || argv.c)) return getOptions(argv);
   const data = readInput((argv.config || argv.c));
-  Object.keys(flags).forEach(key => {
-    // eslint-disable-next-line
-    if (data.hasOwnProperty(key)) data[camelize(key)] = data[key];
-  });
+  Object.keys(data).forEach(key => (data[camelize(key)] = data[key]));
   return getOptions(Object.assign(data, argv));
 }
 
@@ -33,7 +29,7 @@ function getOptions(argv) {
     propSeparator: (argv.propSeparator || argv.s) || '/',
     delimiter: (argv.delimiter || argv.d) || ',',
     excludeProps: (argv.excludeProps || argv.e) || [],
-    renameProps: renamePrompt(argv.renameProps || argv.r)
+    renameProps: getRenamers(argv.renameProps || argv.r)
   };
 }
 
@@ -43,11 +39,20 @@ function parseEOL(eolFlag) {
   return EOL;
 }
 
+function getRenamers(props) {
+  if (!props?.length) return [];
+  const renameCheck = it => it instanceof Object && 'oldPath' in it && 'newPath' in it;
+  const { renamers, propsForPrompt } = props.reduce((res, item) => {
+    res[renameCheck(item) ? 'renamers' : 'propsForPrompt'].push(item);
+    return res;
+  }, { renamers: [], propsForPrompt: [] });
+  const promptedRenamers = renamePrompt(propsForPrompt);
+  return renamers.concat(promptedRenamers);
+}
+
 function renamePrompt(props) {
   if (!props?.length) return [];
   const prompt = require('prompt-sync')({ sigint: true });
-  return props.map(oldPath => ({
-    oldPath,
-    newPath: prompt(`How do you want to rename ${oldPath} property? `)
-  }));
+  const promptText = oldPath => `How do you want to rename "${oldPath}" property? `;
+  return props.map(oldPath => ({ oldPath, newPath: prompt(promptText(oldPath)) }));
 }
