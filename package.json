@@ -17,16 +17,17 @@
   },
   "license": "MIT",
   "dependencies": {
+    "prompt-sync": "^4.2.0",
     "yargs": "^17.0.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.15.0",
     "@babel/eslint-plugin": "^7.14.5",
-    "eslint-plugin-es": "^4.1.0",
     "@extensionengine/eslint-config": "^3.0.0",
     "eslint": "^7.32.0",
     "eslint-config-semistandard": "^16.0.0",
     "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-es": "^4.1.0",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",

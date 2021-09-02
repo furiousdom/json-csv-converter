@@ -5,7 +5,8 @@ function parseOptions(argv) {
     noHeader: argv.header || false,
     propSeparator: (argv.propSeparator || argv.s) || '/',
     delimiter: (argv.delimiter || argv.d) || ',',
-    excludeProps: (argv.excludeProps || argv.e) || []
+    excludeProps: (argv.excludeProps || argv.e) || [],
+    renameProps: renamePrompt(argv.renameProps || argv.r)
   };
 }
 
@@ -16,3 +17,12 @@ function parseFilePaths(argv) {
 }
 
 module.exports = { parseFilePaths, parseOptions };
+
+function renamePrompt(props) {
+  if (!props?.length) return [];
+  const prompt = require('prompt-sync')({ sigint: true });
+  return props.map(oldName => ({
+    oldName,
+    newName: prompt(`How do you want to rename ${oldName} property? `)
+  }));
+}

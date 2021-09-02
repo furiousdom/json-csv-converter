@@ -56,7 +56,7 @@ To get a local copy up and running follow these simple steps.
 ### Prerequisites
 
 Before you begin, ensure you have met the following requirements:
-* You have a **macOS** machine. It may work on **macOS and macOS** but they are not supported.
+* You have a **macOS** machine. It may work on **Linux and Windows** but they are not supported.
 * You have installed [Node.js](https://nodejs.org/en/) (version `>=16.6.0`)
 
 
