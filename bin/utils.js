@@ -24,6 +24,7 @@ function camelize(name) {
 
 function getOptions(argv) {
   return {
+    keepEmptyRows: (argv.keepEmptyRows || argv.k) || false,
     excludeHeader: (argv.excludeHeader || argv.h) || false,
     eol: parseEOL(argv.eol || argv.E),
     propSeparator: (argv.propSeparator || argv.s) || '/',
