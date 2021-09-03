@@ -16,7 +16,7 @@ function parseOptions(argv) {
   return getOptions(Object.assign(data, argv));
 }
 
-module.exports = { parseOptions, parseFilePaths };
+module.exports = { parseFilePaths, parseOptions };
 
 function camelize(name) {
   return name.replace(/-./g, x => x.toUpperCase()[1]);
@@ -24,7 +24,6 @@ function camelize(name) {
 
 function getOptions(argv) {
   return {
-    ndjson: (argv.ndjson || argv.n) || false,
     excludeHeader: (argv.excludeHeader || argv.h) || false,
     eol: parseEOL(argv.eol || argv.E),
     propSeparator: (argv.propSeparator || argv.s) || '/',

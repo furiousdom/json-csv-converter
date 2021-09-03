@@ -17,6 +17,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "lodash": "^4.17.21",
     "prompt-sync": "^4.2.0",
     "yargs": "^17.0.1"
   },

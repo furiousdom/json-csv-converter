@@ -14,7 +14,7 @@ if (!(inputFilePath || outputFilePath)) {
   return;
 }
 
-const data = readInput(inputFilePath, opts.ndjson);
+const data = readInput(inputFilePath);
 const csvCode = convert(data, opts);
 writeOutput(outputFilePath, csvCode);
 console.log('Converting finished.');
