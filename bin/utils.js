@@ -4,9 +4,14 @@ const { EOL } = require('os');
 const { readInput } = require('../lib/fileHandler');
 
 function parseFilePaths(argv) {
-  if (argv._.length !== 2) return {};
-  const [inputFilePath, outputFilePath] = argv._;
-  return { inputFilePath, outputFilePath };
+  if (argv._.length >= 0) {
+    const [inputFilePath, outputFilePath] = argv._;
+    return {
+      inputFilePath,
+      outputFilePath: outputFilePath || getDefaultOutputPath(inputFilePath)
+    };
+  }
+  throw new Error('Missing arguments. Please provide both input and output paths.');
 }
 
 function parseOptions(argv) {
@@ -56,4 +61,9 @@ function renamePrompt(props) {
   const prompt = require('prompt-sync')({ sigint: true });
   const promptText = oldPath => `How do you want to rename "${oldPath}" property? `;
   return props.map(oldPath => ({ oldPath, newPath: prompt(promptText(oldPath)) }));
+}
+
+function getDefaultOutputPath(inputPath) {
+  const pathTemplate = inputPath.slice(0, inputPath.lastIndexOf('.'));
+  return pathTemplate.concat('.csv');
 }

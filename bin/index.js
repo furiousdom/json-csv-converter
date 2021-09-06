@@ -12,10 +12,6 @@ try {
   const { inputFilePath, outputFilePath } = parseFilePaths(argv);
   const opts = parseOptions(argv);
 
-  if (!(inputFilePath || outputFilePath)) {
-    throw new Error('Missing arguments. Please provide both input and output paths.');
-  }
-
   const data = readInput(inputFilePath);
   const csvCode = convert(data, opts);
 
