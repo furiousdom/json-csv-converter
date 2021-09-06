@@ -6,16 +6,23 @@ const { parseFilePaths, parseOptions } = require('./utils');
 const { readInput, writeOutput } = require('../lib/fileHandler');
 const { convert } = require('../lib/converter');
 
-const { inputFilePath, outputFilePath } = parseFilePaths(argv);
-const opts = parseOptions(argv);
+const defaultErrorCode = -1;
 
-if (!(inputFilePath || outputFilePath)) {
-  yargs.showHelp();
-  return;
+try {
+  const { inputFilePath, outputFilePath } = parseFilePaths(argv);
+  const opts = parseOptions(argv);
+
+  if (!(inputFilePath || outputFilePath)) {
+    throw new Error('Missing arguments. Please provide both input and output paths.');
+  }
+
+  const data = readInput(inputFilePath);
+  const csvCode = convert(data, opts);
+
+  writeOutput(outputFilePath, csvCode);
+  console.log('Converting finished.');
+  yargs.exit();
+} catch (err) {
+  console.error(err.message);
+  yargs.exit((err.errno || defaultErrorCode));
 }
-
-const data = readInput(inputFilePath);
-const csvCode = convert(data, opts);
-writeOutput(outputFilePath, csvCode);
-console.log('Converting finished.');
-yargs.exit();
