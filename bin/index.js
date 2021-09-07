@@ -9,13 +9,13 @@ const { convert } = require('../lib/converter');
 const defaultErrorCode = -1;
 
 try {
-  const { inputFilePath, outputFilePath } = parseFilePaths(argv);
+  const { inputPath, outputPath } = parseFilePaths(argv);
   const opts = parseOptions(argv);
 
-  const data = readInput(inputFilePath);
+  const data = readInput(inputPath);
   const csvCode = convert(data, opts);
 
-  writeOutput(outputFilePath, csvCode);
+  writeOutput(outputPath, csvCode);
   console.log('Converting finished.');
   yargs.exit();
 } catch (err) {
