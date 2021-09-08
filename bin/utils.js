@@ -69,5 +69,6 @@ function getTransformers(props, checker, prompter) {
 
 function tranformerPrompt(props, prompter) {
   if (!props?.length) return [];
-  return props.map(prop => ({ prop, value: prompt(prompter(prop)) }));
+  const strProps = props.filter(it => typeof it === 'string');
+  return strProps.map(prop => ({ prop, value: prompt(prompter(prop)) }));
 }
