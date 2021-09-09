@@ -1,21 +1,19 @@
 'use strict';
 
+const { extname, resolve } = require('path');
 const { EOL } = require('os');
-const { readInput } = require('../lib/fileHandler');
 const prompt = require('prompt-sync')({ sigint: true });
 
 function parseFilePaths(argv) {
-  const errMsg = 'Missing arguments. Please provide both input and output paths.';
+  const errMsg = 'Missing arguments. Please provide both input & output paths.';
   if (argv._.length === 0) throw new Error(errMsg);
   const [inputPath, outputPath] = argv._;
   return { inputPath, outputPath: outputPath || getDefaultOutputPath(inputPath) };
 }
 
 function parseOptions(argv) {
-  if (!(argv.config || argv.c)) return getOptions(argv);
-  const data = readInput((argv.config || argv.c));
-  Object.keys(data).forEach(key => (data[camelize(key)] = data[key]));
-  return getOptions(Object.assign(data, argv));
+  const path = argv.config || argv.c;
+  return getOptions(path ? readConfig(path, argv) : argv);
 }
 
 module.exports = { parseFilePaths, parseOptions };
@@ -24,16 +22,31 @@ function getDefaultOutputPath(inputPath) {
   return inputPath.slice(0, inputPath.lastIndexOf('.')).concat('.csv');
 }
 
+function readConfig(path, argv) {
+  try {
+    const configPath = resolve(path);
+    const data = require(configPath);
+    Object.keys(data).forEach(key => (data[camelize(key)] = data[key]));
+    return Object.assign(data, argv);
+  } catch (err) {
+    const extension = extname(path);
+    const errMsg = extension !== '.js' && extension !== '.json'
+      ? 'Invalid config file name. Config file must end with ".js" or ".json"'
+      : `Invalid config file.${err.message.slice(err.message.lastIndexOf(':') + 1)}`;
+    throw new Error(errMsg);
+  }
+}
+
 const camelize = name => name.replace(/-./g, x => x.toUpperCase()[1]);
 
 function getOptions(argv) {
   return {
-    keepEmptyRows: (argv.keepEmptyRows || argv.k) || false,
-    excludeHeader: (argv.excludeHeader || argv.h) || false,
     eol: parseEOL(argv.eol || argv.E),
-    propSeparator: (argv.propSeparator || argv.s) || '/',
     delimiter: (argv.delimiter || argv.d) || ',',
     excludeProps: (argv.excludeProps || argv.e) || [],
+    propSeparator: (argv.propSeparator || argv.s) || '/',
+    keepEmptyRows: (argv.keepEmptyRows || argv.k) || false,
+    excludeHeader: (argv.excludeHeader || argv.h) || false,
     renameProps: getRenamers(argv.renameProps || argv.r),
     setPropValues: getSetters(argv.setPropValues || argv.v)
   };
@@ -52,7 +65,7 @@ function getRenamers(props) {
 }
 
 function getSetters(props) {
-  const checker = it => it instanceof Object && 'prop' in it && 'value' in it;
+  const checker = it => it instanceof Object && 'propPath' in it && 'value' in it;
   const prompter = prop => `Enter value to set "${prop}" property to? `;
   return getTransformers(props, checker, prompter);
 }
@@ -70,5 +83,5 @@ function getTransformers(props, checker, prompter) {
 function tranformerPrompt(props, prompter) {
   if (!props?.length) return [];
   const strProps = props.filter(it => typeof it === 'string');
-  return strProps.map(prop => ({ prop, value: prompt(prompter(prop)) }));
+  return strProps.map(propPath => ({ propPath, value: prompt(prompter(propPath)) }));
 }
