@@ -19,6 +19,6 @@ try {
   console.log('Converting finished.');
   yargs.exit();
 } catch (err) {
-  console.error(err.message);
+  console.error(`ERROR: ${err.message}`);
   yargs.exit((err.errno || defaultErrorCode));
 }
