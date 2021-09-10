@@ -13,7 +13,8 @@ function parseFilePaths(argv) {
 
 function parseOptions(argv) {
   const path = argv.config || argv.c;
-  return getOptions(path ? readConfig(path, argv) : argv);
+  const options = getOptions(path ? readConfig(path, argv) : argv);
+  return checkCompatibility(options);
 }
 
 module.exports = { parseFilePaths, parseOptions };
@@ -26,7 +27,9 @@ function readConfig(path, argv) {
   try {
     const configPath = resolve(path);
     const data = require(configPath);
+
     Object.keys(data).forEach(key => (data[camelize(key)] = data[key]));
+
     return Object.assign(data, argv);
   } catch (err) {
     const extension = extname(path);
@@ -61,21 +64,25 @@ function parseEOL(eolFlag) {
 function getRenamers(props) {
   const checker = it => it instanceof Object && 'oldPath' in it && 'newPath' in it;
   const prompter = oldPath => `How do you want to rename "${oldPath}" property? `;
+
   return getTransformers(props, checker, prompter);
 }
 
 function getSetters(props) {
   const checker = it => it instanceof Object && 'propPath' in it && 'value' in it;
   const prompter = prop => `Enter value to set "${prop}" property to? `;
+
   return getTransformers(props, checker, prompter);
 }
 
 function getTransformers(props, checker, prompter) {
   if (!props?.length) return [];
+
   const { transformers, propsForPrompt } = props.reduce((res, item) => {
     res[checker(item) ? 'transformers' : 'propsForPrompt'].push(item);
     return res;
   }, { transformers: [], propsForPrompt: [] });
+
   const promptedTransformers = tranformerPrompt(propsForPrompt, prompter);
   return transformers.concat(promptedTransformers);
 }
@@ -84,4 +91,22 @@ function tranformerPrompt(props, prompter) {
   if (!props?.length) return [];
   const strProps = props.filter(it => typeof it === 'string');
   return strProps.map(propPath => ({ propPath, value: prompt(prompter(propPath)) }));
+}
+
+function checkCompatibility(options) {
+  const separator = options.propSeparator;
+  const foundInEx = options.excludeProps.find(it => it.includes(separator));
+  const foundInRe = options.renameProps.find(it => it.propPath.includes(separator));
+  const foundInSet = options.setPropValues.find(it => it.propPath.includes(separator));
+  if (foundInEx || foundInRe || foundInSet) return options;
+  return changePropSeparator(options, separator);
+}
+
+function changePropSeparator(options, oldSeparator) {
+  const propSeparator = prompt(
+    `The property separator "${oldSeparator}" wasn't found in\
+    any of the transformers. Enter a new one (or hit ENTER to keep it): `
+  );
+  if (propSeparator === '') return options;
+  return { ...options, propSeparator };
 }
