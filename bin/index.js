@@ -2,11 +2,12 @@
 'use strict';
 
 const { argv, yargs } = require('./yargs');
-const { parseFilePaths, parseOptions } = require('./utils');
 const { readInput, writeOutput } = require('../lib/fileHandler');
 const { convert } = require('../lib/converter');
+const { parseFilePaths } = require('./utils');
+const { parseOptions } = require('./options');
 
-const defaultErrorCode = -1;
+const defaultErrorCode = 1;
 
 try {
   const { inputPath, outputPath } = parseFilePaths(argv);
@@ -20,5 +21,5 @@ try {
   yargs.exit();
 } catch (err) {
   console.error(`ERROR: ${err.message}`);
-  yargs.exit((err.errno || defaultErrorCode));
+  yargs.exit(err.errno || defaultErrorCode);
 }
