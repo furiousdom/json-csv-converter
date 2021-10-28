@@ -1,11 +1,11 @@
 #! /usr/bin/env node
 'use strict';
 
-const { argv, yargs } = require('./yargs');
+const { argv, yargs } = require('../lib/cli');
 const { readInput, writeOutput } = require('../lib/fileHandler');
 const { convert } = require('../lib/converter');
-const { parseFilePaths } = require('./utils');
-const { parseOptions } = require('./options');
+const { parseFilePaths } = require('../lib/utils');
+const { parseOptions } = require('../lib/options');
 
 const defaultErrorCode = 1;
 
