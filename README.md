@@ -119,7 +119,7 @@ Before you begin, ensure you have met the following requirements:
       *     The properties need to be fully specified by their flattened paths.
       **    The user will be prompted to enter the replacement values (new property path or new property value).
 
-      Flags provided through the CLI will overwrite their configuration file counterparts, if both are provided.
+      If both are provided, flags provided through the CLI will overwrite their configuration file counterparts.
       Long flags can be written using both "camelCase" and "pascal-case" in both the config file and CLI.
     ```
 
@@ -134,14 +134,14 @@ For a list of proposed features (and known issues) see the [open issues](https:/
 
 Contributions are what make the open source community such an amazing place to be, learn, inspire, and create. Any contributions are **greatly appreciated**.
 
-To contribute to json-csv-converter please create a pull request.
+To contribute to `json-csv-converter` please create a pull request.
 You can see the GitHub documentation on [creating a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request).
 
 
 
 ## Acknowledgements
 
-* [Antonio Bašić](https://github.com/abasic)
+* [Antonio Bašić](https://github.com/abasic) for mentorship and code review
 
 
 
